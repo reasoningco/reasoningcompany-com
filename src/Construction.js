@@ -96,7 +96,7 @@ function Construction() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
         >
-          2024
+          2025
         </motion.p>
       </motion.div>
 

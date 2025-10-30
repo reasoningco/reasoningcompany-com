@@ -26,15 +26,15 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          SOURCE: "build/"
-          TARGET: "/var/www/reasoningcompany.com/"
-          EXCLUDE: "/node_modules/"
+      - name: Deploy to server via rsync
+        uses: burnett01/rsync-deployments@6.0.0
+        with:
+          switches: -avzr --delete
+          path: build/
+          remote_path: /var/www/reasoningcompany.com/
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
       
       - name: Notify deployment
         run: echo "🚀 Deployed to https://reasoningcompany.com"

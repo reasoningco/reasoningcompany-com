@@ -1,0 +1,94 @@
+.construction-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.construction-content {
+  text-align: center;
+  z-index: 10;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.logo-container {
+  margin-bottom: 4rem;
+}
+
+.construction-logo {
+  width: 120px;
+  height: auto;
+  opacity: 0.9;
+}
+
+.construction-divider {
+  width: 60px;
+  height: 1px;
+  background: #00167a;
+  margin: 0 auto 3rem;
+  transform-origin: center;
+}
+
+.construction-page h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  color: #0a0a0a;
+  margin-bottom: 1rem;
+}
+
+.construction-subtitle {
+  font-size: 1.1rem;
+  color: #666666;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  margin-bottom: 4rem;
+}
+
+.construction-icon {
+  margin-bottom: 3rem;
+  display: flex;
+  justify-content: center;
+  opacity: 0.7;
+}
+
+.year {
+  font-size: 0.875rem;
+  color: #999999;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+}
+
+.construction-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 22, 122, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 22, 122, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .construction-logo {
+    width: 100px;
+  }
+
+  .construction-page h1 {
+    font-size: 2rem;
+  }
+
+  .construction-subtitle {
+    font-size: 1rem;
+  }
+}

@@ -12,6 +12,10 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [currentTime, setCurrentTime] = useState(new Date());
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollDirection, setScrollDirection] = useState('down');
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState({});
+  const [formSubmitting, setFormSubmitting] = useState(false);
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
@@ -28,6 +32,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');
+      setLastScrollY(currentScrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
@@ -36,34 +50,35 @@ function App() {
 
   useEffect(() => {
     console.log(`
-╔════════════════════════════════════════════════════════════════╗
-║                                                                ║
-║     ████████╗██╗  ██╗███████╗                                 ║
-║     ╚══██╔══╝██║  ██║██╔════╝                                 ║
-║        ██║   ███████║█████╗                                   ║
-║        ██║   ██╔══██║██╔══╝                                   ║
-║        ██║   ██║  ██║███████╗                                 ║
-║        ╚═╝   ╚═╝  ╚═╝╚══════╝                                 ║
-║                                                                ║
-║     ██████╗ ███████╗ █████╗ ███████╗ ██████╗ ███╗   ██╗      ║
-║     ██╔══██╗██╔════╝██╔══██╗██╔════╝██╔═══██╗████╗  ██║      ║
-║     ██████╔╝█████╗  ███████║███████╗██║   ██║██╔██╗ ██║      ║
-║     ██╔══██╗██╔══╝  ██╔══██║╚════██║██║   ██║██║╚██╗██║      ║
-║     ██║  ██║███████╗██║  ██║███████║╚██████╔╝██║ ╚████║      ║
-║     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝  ╚═══╝      ║
-║                                                                ║
-║      ██████╗ ██████╗ ███╗   ███╗██████╗  █████╗ ███╗   ██╗   ║
-║     ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗████╗  ██║   ║
-║     ██║     ██║   ██║██╔████╔██║██████╔╝███████║██╔██╗ ██║   ║
-║     ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██║██║╚██╗██║   ║
-║     ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║██║ ╚████║   ║
-║      ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝   ║
-║                                                                ║
-║                 AI that thinks for your business               ║
-║                                                                ║
-║                    Built with intelligence                     ║
-║                                                                ║
-╚════════════════════════════════════════════════════════════════╝
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║   ████████╗██╗  ██╗███████╗    ██████╗ ███████╗ █████╗ ███████╗ ██████╗  ║
+║   ╚══██╔══╝██║  ██║██╔════╝    ██╔══██╗██╔════╝██╔══██╗██╔════╝██╔═══██╗ ║
+║      ██║   ███████║█████╗      ██████╔╝█████╗  ███████║███████╗██║   ██║ ║
+║      ██║   ██╔══██║██╔══╝      ██╔══██╗██╔══╝  ██╔══██║╚════██║██║   ██║ ║
+║      ██║   ██║  ██║███████╗    ██║  ██║███████╗██║  ██║███████║╚██████╔╝ ║
+║      ╚═╝   ╚═╝  ╚═╝╚══════╝    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝  ║
+║                                                                            ║
+║         ███╗   ██╗██╗███╗   ██╗ ██████╗      ██████╗ ██████╗              ║
+║         ████╗  ██║██║████╗  ██║██╔════╝     ██╔════╝██╔═══██╗             ║
+║         ██╔██╗ ██║██║██╔██╗ ██║██║  ███╗    ██║     ██║   ██║             ║
+║         ██║╚██╗██║██║██║╚██╗██║██║   ██║    ██║     ██║   ██║             ║
+║         ██║ ╚████║██║██║ ╚████║╚██████╔╝    ╚██████╗╚██████╔╝             ║
+║         ╚═╝  ╚═══╝╚═╝╚═╝  ╚═══╝ ╚═════╝      ╚═════╝ ╚═════╝              ║
+║                                                                            ║
+║      ██████╗ ██████╗ ███╗   ███╗██████╗  █████╗ ███╗   ██╗██╗   ██╗      ║
+║     ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔══██╗████╗  ██║╚██╗ ██╔╝      ║
+║     ██║     ██║   ██║██╔████╔██║██████╔╝███████║██╔██╗ ██║ ╚████╔╝       ║
+║     ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██╔══██║██║╚██╗██║  ╚██╔╝        ║
+║     ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ██║  ██║██║ ╚████║   ██║         ║
+║      ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝         ║
+║                                                                            ║
+║                      AI that thinks for your business                      ║
+║                                                                            ║
+║                          Built with intelligence                           ║
+║                      https://github.com/reasoningco                        ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
     `);
   }, []);
 
@@ -79,6 +94,33 @@ function App() {
 
   return (
     <div className="App">
+      {/* Background Grid Pattern */}
+      <div className="bg-grid" />
+      
+      {/* Floating Particles */}
+      <div className="particles">
+        {[...Array(20)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="particle"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, Math.random() * 20 - 10, 0],
+              opacity: [0.1, 0.3, 0.1],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Scroll Progress - Only on Blog Page */}
       {currentPage === 'blog' && (
         <motion.div 
@@ -91,8 +133,8 @@ function App() {
       <motion.nav 
         className="main-nav"
         initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        animate={{ y: scrollDirection === 'down' && lastScrollY > 100 ? -120 : 0 }}
+        transition={{ duration: 0.3 }}
       >
         <div className="nav-brand">
           <button 
@@ -181,8 +223,24 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="hero-title"
           >
-            The Reasoning Company
+            {['The', 'Reasoning', 'Company'].map((word, i) => (
+              <motion.span
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 + i * 0.1 }}
+                whileHover={{ 
+                  scale: 1.05,
+                  color: 'var(--accent)',
+                  transition: { duration: 0.2 }
+                }}
+                style={{ display: 'inline-block', marginRight: i < 2 ? '0.3em' : '0' }}
+              >
+                {word}
+              </motion.span>
+            ))}
           </motion.h1>
           <motion.p
             className="tagline"
@@ -190,7 +248,20 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            AI that thinks for your business
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+            >
+              AI that thinks for your business
+            </motion.span>
+            <motion.span
+              className="cursor-blink"
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              |
+            </motion.span>
           </motion.p>
           <motion.div
             className="cta-container"
@@ -235,6 +306,13 @@ function App() {
           className="section-header"
         >
           <h2>Intelligent by design</h2>
+          <motion.div 
+            className="section-underline"
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          />
         </motion.div>
 
         <div className="features-grid">
@@ -250,13 +328,27 @@ function App() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.3 } }}
               onHoverStart={() => setIsHovering(true)}
               onHoverEnd={() => setIsHovering(false)}
             >
-              <motion.div className="feature-number">{(index + 1).toString().padStart(2, '0')}</motion.div>
+              <motion.div 
+                className="feature-number"
+                whileHover={{ scale: 1.2, rotate: 5 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                {(index + 1).toString().padStart(2, '0')}
+              </motion.div>
               <h3>{feature.title}</h3>
               <p>{feature.description}</p>
+              <motion.div 
+                className="feature-arrow"
+                initial={{ x: -10, opacity: 0 }}
+                whileHover={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                →
+              </motion.div>
             </motion.div>
           ))}
         </div>
@@ -397,7 +489,15 @@ function App() {
               <h2>Start a Conversation</h2>
               <p className="form-subtitle">Let's discuss how AI can transform your business</p>
               
-              <form className="contact-form" onSubmit={(e) => { e.preventDefault(); alert('Form submitted!'); setShowContactForm(false); }}>
+              <form className="contact-form" onSubmit={(e) => { 
+                e.preventDefault(); 
+                setFormSubmitting(true);
+                setTimeout(() => {
+                  setFormSubmitting(false);
+                  setShowContactForm(false);
+                  alert('Message sent! We\'ll be in touch soon.');
+                }, 2000);
+              }}>
                 <div className="form-group">
                   <input 
                     type="text" 
@@ -440,8 +540,22 @@ function App() {
                   whileTap={{ scale: 0.98 }}
                   onMouseEnter={() => setIsHovering(true)}
                   onMouseLeave={() => setIsHovering(false)}
+                  disabled={formSubmitting}
                 >
-                  Send Message
+                  {formSubmitting ? (
+                    <>
+                      <motion.span
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                        style={{ display: 'inline-block', marginRight: '0.5rem' }}
+                      >
+                        ⟳
+                      </motion.span>
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Message'
+                  )}
                 </motion.button>
               </form>
             </motion.div>
@@ -492,6 +606,27 @@ function App() {
               </button>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Back to Top Button */}
+      <AnimatePresence>
+        {lastScrollY > 500 && (
+          <motion.button
+            className="back-to-top"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </motion.button>
         )}
       </AnimatePresence>
     </div>
